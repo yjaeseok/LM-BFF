@@ -23,29 +23,35 @@ map_of_mapping = {
 
 
 task = "boolq"
+print(f"Run test with {task}")
+
+print("File open")
 f = open(f"my_auto_template/{task}/16-42.txt", 'r')
 templates = f.readlines()
 f.close()
+print("File closed")
 
 for template in templates:
     mapping = map_of_mapping[task]
-    os.system(f'python run.py --task_name {task} '
-              f'--data_dir data/k-shot/{task}/16-42 '
-              f'--overwrite_output_dir '
-              f'--do_train '
-              f'--do_eval '
-              f'--do_predict '
-              f'--evaluate_during_training '
-              f'--model_name_or_path roberta-large '
-              f'--few_shot_type prompt-demo '
-              f'--num_k 16 '
-              f'--max_steps 1000 '
-              f'--eval_steps 100 '
-              f'--per_device_train_batch_size 2 '
-              f'--learning_rate 1e-5 '
-              f'--num_train_epochs 0 '
-              f'--output_dir result/tmp '
-              f'--seed 42 '
-              f'--template "{template}" '
-              f'--mapping "{mapping}" '
-              f'--num_sample 16')
+    command = f'python run.py --task_name {task} '\
+              f'--data_dir data/k-shot/{task}/16-42 '\
+              f'--overwrite_output_dir '\
+              f'--do_train '\
+              f'--do_eval '\
+              f'--do_predict '\
+              f'--evaluate_during_training '\
+              f'--model_name_or_path roberta-large '\
+              f'--few_shot_type prompt-demo '\
+              f'--num_k 16 '\
+              f'--max_steps 1000 '\
+              f'--eval_steps 100 '\
+              f'--per_device_train_batch_size 2 '\
+              f'--learning_rate 1e-5 '\
+              f'--num_train_epochs 0 '\
+              f'--output_dir result/tmp '\
+              f'--seed 42 '\
+              f'--template "{template}" '\
+              f'--mapping "{mapping}" '\
+              f'--num_sample 16'
+    print(command)
+    os.system(command)
