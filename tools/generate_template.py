@@ -220,7 +220,7 @@ def generate(dataset, template, model, tokenizer, target_number, mapping, beam, 
     return result
 
 def load_dataset(task, data_dir):
-    if task in ["MNLI", "MRPC", "QNLI", "QQP", "RTE", "SNLI", "SST-2", "STS-B", "WNLI", "CoLA"]:
+    if task in ["MNLI", "MRPC", "QNLI", "QQP", "RTE", "SNLI", "SST-2", "STS-B", "WNLI", "CoLA", 'boolq', 'multirc', 'cb']:
         lines = open(os.path.join(data_dir, 'train.tsv')).readlines()
         if task != 'CoLA':
             lines = lines[1:]
@@ -242,6 +242,12 @@ def load_dataset(task, data_dir):
                 dataset.append({'label': line[-1], 'text': [line[1], line[2]]})
             elif task == 'SNLI':
                 dataset.append({'label': line[-1], 'text': [line[7], line[8]]})
+            elif task == 'boolq':
+                dataset.append({'label': line[-1], 'text': [line[0], line[1]]})
+            elif task == 'cb':
+                dataset.append({'label': line[-1], 'text': [line[0], line[1]]})
+            elif task == 'multirc':
+                dataset.append({'label': line[-1], 'text': [line[0], line[1], line[2]]})
             elif task == 'SST-2':
                 dataset.append({'label': line[-1], 'text': [line[0]]})
             elif task == 'STS-B':
@@ -326,7 +332,7 @@ def search_template(model, tokenizer, task_name, k, seed, beam, output_dir, data
             f.write(text + '\n')
         print("####### generated templates #######\n")
 
-    elif task_name in ['MRPC', 'QQP', 'STS-B', 'MNLI', 'SNLI', 'QNLI', 'RTE']:
+    elif task_name in ['MRPC', 'QQP', 'STS-B', 'MNLI', 'SNLI', 'QNLI', 'RTE', 'cb', 'boolq']:
         # Sentence pair tasks
         # We always put [MASK] between the two sentences
         template = "*cls**sent-_0**<extra_id_0>**label**<extra_id_1>**+sentl_1**sep+*"
