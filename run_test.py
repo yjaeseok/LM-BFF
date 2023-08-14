@@ -32,7 +32,7 @@ f.close()
 print("File closed")
 
 for template in templates:
-    template = strip(template)
+    template = template.strip()
     mapping = map_of_mapping[task]
     command = f'python run.py --task_name {task} '\
               f'--data_dir data/k-shot/{task}/16-42 '\
