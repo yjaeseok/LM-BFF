@@ -55,5 +55,4 @@ for template in templates:
               f'--mapping "{mapping}" '\
               f'--num_sample 16'
     print(command)
-    break
     os.system(command)
