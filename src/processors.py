@@ -757,7 +757,7 @@ compute_metrics_mapping = {
     "mpqa": text_classification_metrics,
     "boolq": text_classification_metrics,
     "cb": text_classification_metrics,
-    "multirc": f1_metric
+    "multirc": text_classification_metrics
 }
 
 # For regression task only: median
