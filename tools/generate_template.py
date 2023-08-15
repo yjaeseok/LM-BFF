@@ -3,6 +3,7 @@ from transformers import T5ForConditionalGeneration, T5Tokenizer
 import argparse
 import torch
 import os
+import sys
 from tqdm import tqdm
 import json
 import argparse
@@ -307,6 +308,7 @@ def search_template(model, tokenizer, task_name, k, seed, beam, output_dir, data
         # Single sentence tasks
         # We take two kinds of templates: put [MASK] at the beginning or the end
         template = "*cls**sentu_0**<extra_id_0>**label**<extra_id_1>**sep+*"
+        print(template)
         generate_text = generate(dataset, template, model, tokenizer, target_number=2, mapping=mapping, beam=beam, label=None, truncate='head')[:beam//2]
 
         print("####### generated templates #######")
@@ -323,6 +325,8 @@ def search_template(model, tokenizer, task_name, k, seed, beam, output_dir, data
 
         template = "*cls*.*<extra_id_0>**label**<extra_id_1>**+sentu_0**sep+*"
         generate_text = generate(dataset, template, model, tokenizer, target_number=2, mapping=mapping, beam=beam, label=None, truncate='tail')[:beam//2]
+        print(generate_text)
+        sys.exit()
         print("####### generated templates #######")
         for text in generate_text:
             # Transform T5 outputs to our template format
@@ -339,6 +343,7 @@ def search_template(model, tokenizer, task_name, k, seed, beam, output_dir, data
         # Sentence pair tasks
         # We always put [MASK] between the two sentences
         template = "*cls**sent-_0**<extra_id_0>**label**<extra_id_1>**+sentl_1**sep+*"
+        print(template)
         generate_text = generate(dataset, template, model, tokenizer, target_number=2, mapping=mapping, beam=beam, label=None)
         print("####### generated templates #######")
         for text in generate_text:
@@ -354,17 +359,19 @@ def search_template(model, tokenizer, task_name, k, seed, beam, output_dir, data
     elif task_name in ['multirc']:
         # Triple
         # We always put [MASK] between the two sentences
-        template = "*cls**sent-_0**<extra_id_0>**<extra_id_1>**+sentl_1**label**<extra_id_2>**+sentl_2**sep+*"
-        generate_text = generate(dataset, template, model, tokenizer, target_number=3, mapping=mapping, beam=beam, label=None)
+        template = "*cls**sent-_0**<extra_id_0>**+sentl_1**<extra_id_1>**sent_2**<extra_id_2>**label**sep+*"
+        generate_text = generate(dataset, template, model, tokenizer, target_number=2, mapping=mapping, beam=beam, label=None)
         print("####### generated templates #######")
         for text in generate_text:
             # Transform T5 outputs to our template format
+            print('pre: ', text)
             text = text.replace('<extra_id_0>', '*cls**sent-_0*')
-            text = text.replace('<extra_id_1>', '*mask*')
-            text = text.replace('<extra_id_2>', '*+sentl_1**sep+*')
-            text = text.replace('</s>', '*+sentl_1**sep+*')
+            text = text.replace('<extra_id_1>', '*+sentl_1*')
+            text = text.replace('<extra_id_2>', '*sent_2*')
+            text = text.replace('<extra_id_3>', '*mask**sep+*')
+            text = text.replace('</s>', '*mask**sep+*')
             text = text.replace('▁', '_')
-            print(text)
+            print('output:', text)
             f.write(text + '\n')
         print("####### generated templates #######\n")
     else:

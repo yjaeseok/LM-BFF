@@ -22,7 +22,7 @@ map_of_mapping = {
 }
 
 
-task = "boolq"
+task = "multirc"
 print(f"Run test with {task}")
 
 print("File open")
@@ -31,8 +31,8 @@ templates = f.readlines()
 f.close()
 print("File closed")
 
-for template in templates:
-    template = template.strip()
+for template in templates[66:]:
+    template = template.strip() + '*mask*'
     mapping = map_of_mapping[task]
     command = f'python run.py --task_name {task} '\
               f'--data_dir data/k-shot/{task}/16-42 '\
