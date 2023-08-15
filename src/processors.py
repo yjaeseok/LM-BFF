@@ -665,7 +665,7 @@ def text_classification_metrics(task_name, preds, labels):
     return {"acc": (preds == labels).mean()}
 
 def f1_metric(task_name, preds, labels):
-    return {"f1_score": float(f1_score(labels, preds, average='macro'))}
+    return {"f1": float(f1_score(labels, preds, average='macro'))}
 # Add your task to the following mappings
 
 processors_mapping = {
