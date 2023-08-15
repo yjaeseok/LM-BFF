@@ -132,8 +132,8 @@ def main():
             args.test_key = 'cb_test_eval_acc'
             print_name = condition['task_name']
         elif condition['task_name'] == 'multirc':
-            args.key = 'multirc_dev_eval_f1'
-            args.test_key = 'multirc_test_eval_f1'
+            args.key = 'multirc_dev_eval_acc'
+            args.test_key = 'multirc_test_eval_acc'
             print_name = condition['task_name']
         else:
             raise NotImplementedError
