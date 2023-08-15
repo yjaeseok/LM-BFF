@@ -354,15 +354,25 @@ def search_template(model, tokenizer, task_name, k, seed, beam, output_dir, data
     elif task_name in ['multirc']:
         # Triple
         # We always put [MASK] between the two sentences
-        template = "*cls**sent-_0**<extra_id_0>**<extra_id_1>**+sentl_1**label**<extra_id_2>**+sentl_2**sep+*"
+        template = "*cls**sent-_0*" \
+                   "*<extra_id_0>*" \
+                   "*+sentl_1*" \
+                   "*<extra_id_1>*" \
+                   "*+sentl_2*" \
+                   "*label*" \
+                   "*<extra_id_2>*" \
+                   "*+sentl_3*" \
+                   "*sep+*"
         generate_text = generate(dataset, template, model, tokenizer, target_number=3, mapping=mapping, beam=beam, label=None)
         print("####### generated templates #######")
         for text in generate_text:
             # Transform T5 outputs to our template format
             text = text.replace('<extra_id_0>', '*cls**sent-_0*')
-            text = text.replace('<extra_id_1>', '*mask*')
-            text = text.replace('<extra_id_2>', '*+sentl_1**sep+*')
-            text = text.replace('</s>', '*+sentl_1**sep+*')
+            text = text.replace('<extra_id_1>', '*+sentl_1*')
+            text = text.replace('<extra_id_2>', '*+sentl_2*')
+            text = text.replace('<extra_id_3>', '*mask*')
+            text = text.replace('<extra_id_4>', '*+sentl_3**sep+*')
+            text = text.replace('</s>', '*+sentl_3**sep+*')
             text = text.replace('▁', '_')
             print(text)
             f.write(text + '\n')
